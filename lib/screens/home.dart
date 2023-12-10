@@ -4,7 +4,7 @@ import 'package:notes_app/screens/add_note.dart';
 
 import 'package:provider/provider.dart';
 
-import '../models/notes.dart';
+import '../models/notes_provider.dart';
 import '../widgets/notes_card.dart';
 
 // ignore: must_be_immutable
@@ -63,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 25, 25, 25),
-      body: Consumer<NotesOperation>(
-          builder: (context, NotesOperation data, child) {
+      body: Consumer<NotesProvider>(
+          builder: (context, NotesProvider data, child) {
         return ListView.builder(
             itemCount: data.getNotes.length,
             itemBuilder: (context, index) {

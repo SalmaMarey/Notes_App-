@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:notes_app/models/notes_provider.dart';
+
+import 'package:notes_app/screens/edit_note.dart';
 import 'package:provider/provider.dart';
 
 import '../models/note.dart';
-
-import '../screens/edit_note.dart';
 
 class NotesCard extends StatefulWidget {
   const NotesCard({super.key, required this.note});
@@ -29,15 +30,15 @@ class _NotesCardState extends State<NotesCard> {
   }
 
   String tilteText = '';
-  String id = '';
+
   String contentText = '';
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (ctx) => const EditNote()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (ctx) => EditNote(note: widget.note)));
         },
         child: Card(
           color: randomGenerator(),
@@ -76,11 +77,8 @@ class _NotesCardState extends State<NotesCard> {
                   color: Color.fromARGB(255, 48, 48, 48),
                 ),
                 onPressed: () {
-                  // Provider.of<Note>(context, listen: false).deleteNote(id);
-                  // Navigator.pop(context);
-
-                  Provider.of<Note>(context, listen: false).deleteNote(id);
-                  Navigator.pop(context);
+                  Provider.of<NotesProvider>(context, listen: false)
+                      .deleteNote(widget.note.id);
                 },
               ),
             ),

@@ -1,8 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/note.dart';
+import '../models/notes_provider.dart';
 import 'home.dart';
 
-class EditNote extends StatelessWidget {
-  const EditNote({super.key});
+class EditNote extends StatefulWidget {
+  const EditNote({super.key, required this.note});
+  final Note note;
+
+  @override
+  State<EditNote> createState() => _EditNoteState();
+}
+
+class _EditNoteState extends State<EditNote> {
+  String tilteText = '';
+
+  String contentText = '';
+
+  late TextEditingController _titlecontroller;
+  late TextEditingController _contentcontroller;
+  @override
+  void initState() {
+    super.initState();
+
+    _titlecontroller = TextEditingController(text: widget.note.title);
+    _contentcontroller = TextEditingController(text: widget.note.content);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +43,13 @@ class EditNote extends StatelessWidget {
             )),
         backgroundColor: const Color.fromARGB(255, 25, 25, 25),
         actions: [
-          const Icon(
-            Icons.edit_note_outlined,
-            size: 30,
-            color: Colors.white,
+          IconButton(
+            icon: const Icon(
+              Icons.edit_note_outlined,
+              size: 30,
+              color: Colors.white,
+            ),
+            onPressed: () {},
           ),
           const SizedBox(
             width: 10,
@@ -32,7 +58,17 @@ class EditNote extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 161, 144, 92),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<NotesProvider>(context, listen: false).editNote(
+                  Note(
+                      content: _contentcontroller.text,
+                      title: _titlecontroller.text,
+                      date: DateTime.now(),
+                      id: widget.note.id),
+                );
+
+                Navigator.pop(context);
+              },
               child: const Text(
                 'Save',
                 style: TextStyle(color: Colors.white, fontSize: 20),
@@ -43,36 +79,52 @@ class EditNote extends StatelessWidget {
         ],
       ),
       body: ListView(
-        children: const [
+        children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  '6 Dec 2023, 05:52 PM',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
               Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Title',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: 365,
+                      child: TextField(
+                        controller: _titlecontroller,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.white),
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          tilteText = value;
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'Content',
-                  style: TextStyle(color: Colors.white),
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 365,
+                  height: 900,
+                  child: TextField(
+                    controller: _contentcontroller,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      labelStyle: TextStyle(color: Colors.white),
+                      // label: Text(widget.note.content),
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      contentText = value;
+                    },
+                  ),
                 ),
               ),
             ],

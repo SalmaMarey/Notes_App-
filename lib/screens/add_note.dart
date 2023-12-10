@@ -3,6 +3,7 @@ import 'package:notes_app/models/note.dart';
 
 import 'package:provider/provider.dart';
 
+import '../models/notes_provider.dart';
 import 'home.dart';
 
 class AddNote extends StatefulWidget {
@@ -40,8 +41,13 @@ class _AddNoteState extends State<AddNote> {
                 backgroundColor: const Color.fromARGB(255, 161, 144, 92),
               ),
               onPressed: () {
-                Provider.of<Note>(context, listen: false)
-                    .addNewNote(tilteText, contentText, DateTime.now());
+                Provider.of<NotesProvider>(context, listen: false).addNewNote(
+                  Note(
+                      content: contentText,
+                      title: tilteText,
+                      date: DateTime.now(),
+                      id: uuid.v4()),
+                );
                 Navigator.pop(context);
               },
               child: const Text(

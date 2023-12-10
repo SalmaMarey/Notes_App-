@@ -6,8 +6,8 @@ final dateFormat = DateFormat.yMd().add_jm();
 
 class Note {
   final String id;
-  final String title;
-  final String content;
+  late final String title;
+  late final String content;
   final DateTime date;
 
   String get formattedDate {
@@ -26,5 +26,13 @@ class Note {
     String contentText,
     DateTime date,
   ) {}
-  void deleteNote(String id) {}
+  void deleteNote(
+    String id,
+  ) {}
+  void editNote(
+    String id,
+    String tilteText,
+    String contentText,
+    DateTime date,
+  ) {}
 }

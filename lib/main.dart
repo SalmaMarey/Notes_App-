@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/models/notes.dart';
+import 'package:notes_app/models/notes_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/home.dart';
@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<NotesOperation>(
-      create: (BuildContext context) => NotesOperation(),
+    return ChangeNotifierProvider<NotesProvider>(
+      create: (BuildContext context) => NotesProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
