@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/note.dart';
@@ -59,14 +61,16 @@ class _EditNoteState extends State<EditNote> {
                 backgroundColor: const Color.fromARGB(255, 161, 144, 92),
               ),
               onPressed: () {
-                Provider.of<NotesProvider>(context, listen: false).editNote(
-                  Note(
-                      content: _contentcontroller.text,
-                      title: _titlecontroller.text,
-                      date: DateTime.now(),
-                      id: widget.note.id),
-                );
-
+                // Provider.of<NotesProvider>(context, listen: false).editNote(
+                //    print(widget.note.toString());
+                // );
+                // //   Note(
+                // //       content: _contentcontroller.text,
+                // //       title: _titlecontroller.text,
+                // //       date: DateTime.now(),
+                // //       id: widget.note.id),
+                // // );
+                // print(widget.note.toString());
                 Navigator.pop(context);
               },
               child: const Text(

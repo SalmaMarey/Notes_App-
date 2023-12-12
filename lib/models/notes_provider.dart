@@ -22,6 +22,7 @@ class NotesProvider extends ChangeNotifier {
 
   // void editNote(String id, String title, String content) {
   void editNote(Note note) {
+    print(_notes);
     final myNote = _notes.firstWhere((item) => item.id == note.id);
     myNote.title = note.title;
     myNote.content = note.content;
