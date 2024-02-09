@@ -4,10 +4,9 @@ import 'package:notes_app/screens/add_note.dart';
 
 import 'package:provider/provider.dart';
 
-import '../models/notes_provider.dart';
+import '../provider/notes_provider.dart';
 import '../widgets/notes_card.dart';
 
-// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
@@ -18,6 +17,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<NotesProvider>().loadNotes();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: const Text(
           'Notes',
-          style: TextStyle(color: Colors.white, fontSize: 35),
+          style: TextStyle(color: Colors.white, fontSize: 30),
         ),
         actions: [
           Container(

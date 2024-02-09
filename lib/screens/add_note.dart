@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/models/note.dart';
+import 'package:notes_app/screens/tab_screen.dart';
 
 import 'package:provider/provider.dart';
 
-import '../models/notes_provider.dart';
+import '../provider/notes_provider.dart';
 import 'home.dart';
 
 class AddNote extends StatefulWidget {
@@ -37,23 +38,29 @@ class _AddNoteState extends State<AddNote> {
         backgroundColor: const Color.fromARGB(255, 25, 25, 25),
         actions: [
           ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 161, 144, 92),
-              ),
-              onPressed: () {
-                Provider.of<NotesProvider>(context, listen: false).addNewNote(
-                  Note(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 161, 144, 92),
+            ),
+            onPressed: () {
+              context.read<NotesProvider>().addNewNote(
+                    Note(
                       content: contentText,
                       title: tilteText,
                       date: DateTime.now(),
-                      id: uuid.v4()),
-                );
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'Save',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )),
+                      id: uuid.v4(),
+                    ),
+                  );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: ((context) => const TabScreen()),
+                ),
+              );
+            },
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
           const SizedBox(
             width: 10,
           ),

@@ -6,9 +6,11 @@ final dateFormat = DateFormat.yMd().add_jm();
 
 class Note {
   final String id;
-  late final String title;
-  late final String content;
+  String title;
+  String content;
   final DateTime date;
+  bool deleted;
+  bool isExpanded;
 
   String get formattedDate {
     return dateFormat.format(date);
@@ -16,10 +18,12 @@ class Note {
 
   Note(
       {required this.content,
+      this.deleted = false,
+      this.isExpanded = false,
       required this.title,
       required this.date,
-      required String id})
-      : id = uuid.v4();
+      required String? id})
+      : id = id ?? uuid.v4();
 
   void addNewNote(
     String tilteText,
@@ -30,9 +34,25 @@ class Note {
     String id,
   ) {}
   void editNote(
-    String id,
     String tilteText,
     String contentText,
     DateTime date,
   ) {}
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'content': content,
+      'date': date.toIso8601String(),
+      'id': id,
+    };
+  }
+
+  factory Note.fromJson(Map<String, dynamic> parsedJson) {
+    return Note(
+      title: parsedJson['title'] ?? "",
+      content: parsedJson['content'] ?? "",
+      date: DateTime.parse(parsedJson['date'] ?? ""),
+      id: parsedJson['id'] ?? "",
+    );
+  }
 }

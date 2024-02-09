@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/models/notes_provider.dart';
+import 'package:notes_app/provider/notes_provider.dart';
+import 'package:notes_app/screens/tab_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/home.dart';
@@ -19,9 +20,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: const Color.fromARGB(255, 197, 107, 89),
+          ),
           useMaterial3: true,
         ),
-        home: const HomeScreen(),
+        home: const TabScreen(),
       ),
     );
   }

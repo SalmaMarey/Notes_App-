@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:notes_app/models/notes_provider.dart';
+import 'package:notes_app/provider/notes_provider.dart';
 
 import 'package:notes_app/screens/edit_note.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +18,10 @@ class NotesCard extends StatefulWidget {
 
 class _NotesCardState extends State<NotesCard> {
   final List<Color> circleColors = [
-    const Color.fromARGB(255, 114, 78, 120),
+    const Color.fromARGB(255, 197, 107, 89),
     Colors.blue,
-    const Color.fromARGB(255, 112, 128, 65),
-    const Color.fromARGB(255, 120, 78, 78),
+    const Color.fromARGB(255, 3, 83, 108),
+    const Color.fromARGB(255, 149, 57, 77),
     const Color.fromARGB(255, 105, 105, 105),
   ];
 
@@ -40,54 +40,163 @@ class _NotesCardState extends State<NotesCard> {
           Navigator.push(context,
               MaterialPageRoute(builder: (ctx) => EditNote(note: widget.note)));
         },
-        child: Card(
-          color: randomGenerator(),
-          child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
+        child: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Card(
+            color: randomGenerator(),
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Text(
                       widget.note.title,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                    // const SizedBox(
+                    //   width: 180,
+                    // ),
+                    IconButton(
+                      onPressed: () {
+                        Provider.of<NotesProvider>(context, listen: false)
+                            .bookmarkNote(widget.note.id);
+                      },
+                      icon: Provider.of<NotesProvider>(context)
+                              .getBookmarkedNoteIds
+                              .contains(widget.note.id)
+                          ? const Icon(
+                              Icons.bookmark,
+                              size: 30,
+                              color: Colors.yellow,
+                            )
+                          : const Icon(
+                              Icons.bookmark_add_outlined,
+                              size: 30,
+                              color: Color.fromARGB(255, 48, 48, 48),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                title: Consumer<NotesProvider>(
+                  builder: (context, notesProvider, child) {
+                    final content = widget.note.content;
+
+                    final displayedContent = widget.note.isExpanded
+                        ? content
+                        : content.length >= 50
+                            ? '${content.substring(0, 50)}...'
+                            : content;
+
+                    return Text(displayedContent);
+                  },
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, left: 56),
+                  child: Center(
+                    child: Text(
+                      widget.note.formattedDate,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 180,
-                  ),
-                  const Icon(
-                    Icons.bookmark,
+                ),
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.delete_sweep,
                     size: 30,
-                    color: Colors.yellow,
-                  )
-                ],
+                    color: Color.fromARGB(255, 48, 48, 48),
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text("Welcome"),
+                        content: const Text(
+                            "Do you really want to delete this note?"),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {},
+                            child: Row(children: [
+                              Consumer<NotesProvider>(
+                                builder: (context, notesProvider, _) {
+                                  return InkWell(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: const Color.fromARGB(
+                                            255, 161, 144, 92),
+                                      ),
+                                      padding: const EdgeInsets.all(10),
+                                      child: const Text(
+                                        "Yes, I'm sure",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      notesProvider.deleteNote(widget.note.id);
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                width: 53,
+                              ),
+                              InkWell(
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color:
+                                        const Color.fromARGB(255, 161, 144, 92),
+                                  ),
+                                  child: const Text(
+                                    "Cancel ",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ]),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-            ListTile(
-              title: Text(widget.note.content),
-              subtitle: Text(widget.note.formattedDate),
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.delete_sweep,
-                  size: 30,
-                  color: Color.fromARGB(255, 48, 48, 48),
+              IconButton(
+                icon: Consumer<NotesProvider>(
+                  builder: (context, notesProvider, child) {
+                    return Icon(
+                      widget.note.isExpanded
+                          ? Icons.expand_less
+                          : Icons.expand_more,
+                      color: const Color.fromARGB(255, 48, 48, 48),
+                    );
+                  },
                 ),
                 onPressed: () {
                   Provider.of<NotesProvider>(context, listen: false)
-                      .deleteNote(widget.note.id);
+                      .toggleShowAllText(widget.note);
                 },
               ),
-            ),
-            const Icon(
-              Icons.expand_more,
-              color: Colors.black,
-              size: 25,
-            ),
-          ]),
+            ]),
+          ),
         ));
   }
 }
